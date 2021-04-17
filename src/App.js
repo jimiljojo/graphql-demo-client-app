@@ -1,24 +1,30 @@
-import logo from './logo.svg';
+import { ApolloClient, InMemoryCache, HttpLink, ApolloProvider } from '@apollo/client';
 import './App.css';
+import Main from './layout/Main'
+
+
+//this creates a URL with the required headers for auth
+const datagraph_url = new HttpLink({
+  uri: process.env.REACT_APP_API_URL,
+  headers: {
+    'client_id': process.env.REACT_APP_CLIENT_ID,
+    'client_secret': process.env.REACT_APP_CLIENT_SECRET
+  }
+});
+//create an apollo client to make GQLcalls
+const client = new ApolloClient({
+  link: datagraph_url,
+  cache: new InMemoryCache()
+});
+
+
+
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+  <ApolloProvider client={client}>
+    <Main />
+  </ApolloProvider>
   );
 }
 
